@@ -52,11 +52,6 @@ export default function Header() {
           </nav>
         </div>
       </div>
-
-      {/* Header下バナー広告枠 */}
-      <div className="border-t border-gray-800/50 py-2 bg-gray-900/30">
-        <AdPlaceholder variant="banner" />
-      </div>
     </header>
   )
 }
