@@ -9,6 +9,7 @@ export default function Header() {
 
   const navLinks = [
     { to: '/', label: t.nav.home },
+    { to: '/blog', label: 'ブログ' },
     { to: '/privacy', label: t.nav.privacy },
     { to: '/terms', label: t.nav.terms },
     { to: '/contact', label: t.nav.contact },
