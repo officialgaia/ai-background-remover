@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /dist/
+
+# AI / LLM crawlers
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+Sitemap: https://your-domain.com/sitemap.xml
