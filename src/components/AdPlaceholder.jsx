@@ -1,74 +1,60 @@
-/**
- * AdPlaceholder
- * 広告スロットのプレースホルダー。
- * AdSense/Carbon Ads導入時はここのコメントアウトを外して差し替える。
- *
- * variant:
- *   "banner"   - 728x90 横長バナー (Header下)
- *   "square"   - 300x250 スクエア (Sidebar)
- *   "infeed"   - インフィード型 (リスト間)
- *   "loading"  - 処理待ち中の推薦広告エリア
- */
+import React, { useEffect } from 'react';
+
 export default function AdPlaceholder({ variant = 'banner', className = '' }) {
+  // ページ遷移やコンポーネントの表示に合わせて広告を初期化
+  useEffect(() => {
+    try {
+      // window.adsbygoogle が存在することを確認して push
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (e) {
+      // 審査中やブロックされている際のエラーは無視
+      console.error('AdSense error:', e);
+    }
+  }, [variant]); // 表示形式が変わる際にも再実行
+
+  const clientID = "ca-pub-6219709858525033"; // あなたのパブリッシャーID
+
   const styles = {
     banner: {
-      wrapper: 'w-full h-[90px] max-w-[728px] mx-auto',
-      label: 'バナー広告 (728×90)',
-      slotId: 'ad-banner-top',
+      wrapper: 'w-full min-h-[90px] max-w-[728px] mx-auto',
+      slot: '1595238605', // ヘッダー下専用スロットID
+      format: 'auto',
     },
+    // 他のスロットIDを作った場合はここに追記。
+    // まだ1つしかない場合は、一旦すべて同じスロットIDを割り当てておきます。
     square: {
-      wrapper: 'w-[300px] h-[250px] flex-shrink-0',
-      label: 'サイドバー広告 (300×250)',
-      slotId: 'ad-sidebar',
+      wrapper: 'w-[300px] h-[250px] mx-auto',
+      slot: '1595238605', 
+      format: 'rectangle',
     },
     infeed: {
-      wrapper: 'w-full h-[100px]',
-      label: 'インフィード広告',
-      slotId: 'ad-infeed',
+      wrapper: 'w-full min-h-[100px]',
+      slot: '1595238605',
+      format: 'fluid',
     },
     loading: {
       wrapper: 'w-full min-h-[200px]',
-      label: 'ローディング中広告',
-      slotId: 'ad-loading',
+      slot: '1595238605',
+      format: 'auto',
     },
   }
 
   const s = styles[variant] || styles.banner
 
   return (
-    <div className={`${s.wrapper} ${className}`} id={s.slotId} aria-label="広告">
-      {/* === AdSense挿入例 ===
+    <div 
+      className={`flex justify-center overflow-hidden py-2 ${s.wrapper} ${className}`} 
+      aria-label="Advertisement"
+    >
+      {/* Google AdSense insタグ */}
       <ins
         className="adsbygoogle"
-        style={{ display: 'block' }}
-        data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-        data-ad-slot="YYYYYYYYYY"
-        data-ad-format={variant === 'banner' ? 'horizontal' : 'auto'}
+        style={{ display: 'block', width: '100%' }}
+        data-ad-client={clientID}
+        data-ad-slot={s.slot}
+        data-ad-format={s.format}
         data-full-width-responsive="true"
       />
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-      */}
-
-      {/* === Carbon Ads挿入例 ===
-      <script
-        async
-        type="text/javascript"
-        src="//cdn.carbonads.com/carbon.js?serve=XXXXXXXX&placement=YYYYYYYY"
-        id="_carbonads_js"
-      />
-      */}
-
-      {/* 開発用プレースホルダー表示 */}
-      <div className="w-full h-full border-2 border-dashed border-gray-600 rounded-lg flex flex-col items-center justify-center gap-1 bg-gray-900/40 select-none">
-        <span className="text-xs text-gray-500 font-mono uppercase tracking-wider">AD</span>
-        <span className="text-xs text-gray-600">{s.label}</span>
-        {variant === 'loading' && (
-          <p className="text-sm text-gray-400 mt-2 text-center px-4">
-            🤖 AIが処理中です…<br />
-            <span className="text-gray-500 text-xs">こちらのサービスもおすすめ</span>
-          </p>
-        )}
-      </div>
     </div>
   )
 }
